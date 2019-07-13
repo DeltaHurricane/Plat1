@@ -33,6 +33,8 @@ class Player(pg.sprite.Sprite):
                 self.vel.y = -15
 
     def update(self):
+
+        #acelera o player pra baixo e checa se ele ta indo pra esquerda ou direita
         self.acc = vec(0, 0.50)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT]:
