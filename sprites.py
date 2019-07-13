@@ -17,6 +17,7 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.enable_colision = 1
+        self.direcion = 1
 
     def jump(self):
         #pula se estiver em plataforma ou no canto
@@ -25,21 +26,32 @@ class Player(pg.sprite.Sprite):
         self.rect.y -=1
         keys = pg.key.get_pressed()
         if not hits and keys [pg.K_DOWN]:
-            self.vel.y = 20
+            self.vel.y = 15
         elif hits:
             if keys [pg.K_DOWN]:
                 self.enable_colision = 0
             else:
                 self.vel.y = -15
 
+    def direcao(self):
+        dir = vec(self.direcion,0)
+        keys = pg.key.get_pressed()
+        if keys[pg.K_UP]:
+            dir.y = -1
+        if keys[pg.K_DOWN]:
+            dir.y = 1
+        return dir
+
     def update(self):
         #acelera o player pra baixo e checa se ele ta indo pra esquerda ou direita
         self.acc = vec(0, 0.50)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT]:
-                self.acc.x = -PLAYER_ACC
+            self.acc.x = -PLAYER_ACC
+            self.direcion =-1
         elif keys[pg.K_RIGHT]:
-                self.acc.x = PLAYER_ACC
+            self.acc.x = PLAYER_ACC
+            self.direcion = 1
 
         #apply friction
         self.acc.x += self.vel.x *  PLAYER_FRICTION
@@ -67,9 +79,17 @@ class Plataform(pg.sprite.Sprite):
         self.rect.y = y
 
 #classe atk pra sprite de atk
-class Atk (pg.sprite.Sprite):
-    def __init__(self, x, y, vec):
+class AtkRanged (pg.sprite.Sprite):
+    def __init__(self, player):
         pg.sprite.Sprite.__init__(self)
-        self.self.image = pg.Surface(PLAYER_SIZE)
+        self.image = pg.Surface((5, 5))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.vel = player.direcao()
+        self.rect.center = (player.rect.center[0]+ PLAYER_SIZE[0]/2*self.vel.x , player.rect.center[1] + PLAYER_SIZE[1]/2*self.vel.y)
 
-
+    def update(self):
+        self.rect.center += self.vel *5
+        pos = vec(self.rect.center)
+        if pos.x > WIDTH+200 or pos.x < -200 or pos.y > HEIGHT+200 or pos.y < -200:
+            self.kill()

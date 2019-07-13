@@ -64,6 +64,9 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+                if event.key == pg.K_z:
+                    self.atkranged = AtkRanged(self.player)
+                    self.all_sprites.add((self.atkranged))
 
     def draw(self):
         # draw / render
