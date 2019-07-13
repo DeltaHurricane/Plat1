@@ -116,16 +116,24 @@ class AtkRanged (pg.sprite.Sprite):
 class AtkMelee (pg.sprite.Sprite):
     def __init__(self, player):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((30,10))
-        self.image.fill(RED)
         self.player = player
-        self.rect = self.image.get_rect()
         self.vel = player.direcao()
-        self.rect.center = (player.rect.center[0]+ PLAYER_SIZE[0]/2*self.vel.x,player.rect.center[1])
+        if self.vel.y < 0:
+            self.image = pg.Surface((10, 30))
+            self.rect = self.image.get_rect()
+            self.rect.midbottom = self.player.rect.midtop
+        else:
+            self.image = pg.Surface((30, 10))
+            self.rect = self.image.get_rect()
+            self.rect.center = (player.rect.center[0]+ (PLAYER_SIZE[0]+15)*self.vel.x,player.rect.center[1])
         self.cont = 0
+        self.image.fill(RED)
 
     def update(self):
         self.cont +=1
-        self.rect.center = (self.player.rect.center[0]+ PLAYER_SIZE[0]*self.vel.x,self.player.rect.center[1])
-        if self.cont == 15:
+        if self.vel.y < 0:
+            self.rect.midbottom = self.player.rect.midtop
+        else:
+            self.rect.center = (self.player.rect.center[0]+ PLAYER_SIZE[0]*self.vel.x,self.player.rect.center[1])
+        if self.cont == 3:
             self.kill()
