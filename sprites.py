@@ -66,7 +66,7 @@ class Plataform(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-
+#classe atk pra sprite de atk
 class Atk (pg.sprite.Sprite):
     def __init__(self, x, y, vec):
         pg.sprite.Sprite.__init__(self)
