@@ -41,13 +41,14 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_RIGHT]:
                 self.acc.x = PLAYER_ACC
 
-
         #apply friction
         self.acc.x += self.vel.x *  PLAYER_FRICTION
+
         #equation of motion
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
+
         #stop arround the corners of the screen
         if self.pos.x >= WIDTH - PLAYER_SIZE[0]/2:
             self.pos.x = WIDTH - PLAYER_SIZE[0]/2
@@ -64,5 +65,11 @@ class Plataform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+class Atk (pg.sprite.Sprite):
+    def __init__(self, x, y, vec):
+        pg.sprite.Sprite.__init__(self)
+        self.self.image = pg.Surface(PLAYER_SIZE)
 
 
