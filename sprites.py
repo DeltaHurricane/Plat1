@@ -18,6 +18,9 @@ class Player(pg.sprite.Sprite):
         self.acc = vec(0, 0)
         self.enable_colision = 1
         self.direcion = 1
+        self.atk_sprites = pg.sprite.Group()
+        self.ranged_sprites = pg.sprite.Group()
+        self.melee_sprites = pg.sprite.Group()
 
     def jump(self):
         #pula se estiver em plataforma ou no canto
@@ -32,6 +35,17 @@ class Player(pg.sprite.Sprite):
                 self.enable_colision = 0
             else:
                 self.vel.y = -15
+
+
+    def AtkRanged(self):
+        self.atkranged = AtkRanged(self)
+        self.atk_sprites.add((self.atkranged))
+        self.ranged_sprites.add((self.atkranged))
+
+    def AtkMelee(self):
+        self.atkmelee = AtkMelee(self)
+        self.atk_sprites.add((self.atkmelee))
+        self.melee_sprites.add((self.atkmelee))
 
     def direcao(self):
         dir = vec(self.direcion,0)
@@ -69,6 +83,9 @@ class Player(pg.sprite.Sprite):
             self.pos.x = 0 + PLAYER_SIZE[0]/2
             self.vel.x = 0
 
+        self.atk_sprites.update()
+
+
 class Plataform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
         pg.sprite.Sprite.__init__(self)
@@ -78,7 +95,7 @@ class Plataform(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-#classe atk pra sprite de atk
+#classe atkranged pra sprite de atk ranged
 class AtkRanged (pg.sprite.Sprite):
     def __init__(self, player):
         pg.sprite.Sprite.__init__(self)
@@ -92,4 +109,23 @@ class AtkRanged (pg.sprite.Sprite):
         self.rect.center += self.vel *5
         pos = vec(self.rect.center)
         if pos.x > WIDTH+200 or pos.x < -200 or pos.y > HEIGHT+200 or pos.y < -200:
+            self.kill()
+
+
+#classe atk pra sprite de atk melee
+class AtkMelee (pg.sprite.Sprite):
+    def __init__(self, player):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((30,10))
+        self.image.fill(RED)
+        self.player = player
+        self.rect = self.image.get_rect()
+        self.vel = player.direcao()
+        self.rect.center = (player.rect.center[0]+ PLAYER_SIZE[0]/2*self.vel.x,player.rect.center[1])
+        self.cont = 0
+
+    def update(self):
+        self.cont +=1
+        self.rect.center = (self.player.rect.center[0]+ PLAYER_SIZE[0]*self.vel.x,self.player.rect.center[1])
+        if self.cont == 15:
             self.kill()
