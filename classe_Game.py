@@ -21,8 +21,11 @@ class Game:
     def new(self):
         self.all_sprites = pg.sprite.Group()
         self.plataforms = pg.sprite.Group()
-        self.player = Player(self)
-        self.all_sprites.add((self.player))
+        self.players = {}
+        for i in range(PLAYER_QTD):
+            player = (Player(self,PLAYER_KEYS[i]))
+            self.players[i] = (player)
+            self.all_sprites.add((player))
         for p1 in PLATAFORM_LIST:
             p = Plataform(*p1)
             self.all_sprites.add(p)
@@ -41,16 +44,17 @@ class Game:
     def update(self):
         self.all_sprites.update()
         #check if player hits plataform only if falling
-        if self.player.vel.y > 0:
-            self.player.rect.y += 1
-            hits = pg.sprite.spritecollide(self.player , self.plataforms, False)
-            self.player.rect.y -= 1
-            if hits and self.player.enable_colision:
-                self.player.vel.y = 0
-                self.player.pos.y = hits[0].rect.top
+        for player in self.players.values():
+            if player.vel.y > 0:
+                player.rect.y += 1
+                hits = pg.sprite.spritecollide(player , self.plataforms, False)
+                player.rect.y -= 1
+                if hits and player.enable_colision:
+                    player.vel.y = 0
+                    player.pos.y = hits[0].rect.top
 
-            if not hits:
-                self.player.enable_colision = 1
+                if not hits:
+                    player.enable_colision = 1
 
     def eventes(self):
         #game loop - events
@@ -62,18 +66,16 @@ class Game:
                     self.playing = False
                 self.running = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE:
-                    self.player.jump()
-                if event.key == pg.K_z:
-                    self.player.AtkRanged()
-                if event.key == pg.K_x:
-                    self.player.AtkMelee()
+                for player in self.players.values():
+                    if event.key in player.controls[4:]:
+                        player.do(event.key)
 
     def draw(self):
         # draw / render
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
-        self.player.atk_sprites.draw((self.screen))
+        for player in self.players.values():
+            player.atk_sprites.draw((self.screen))
         # depois de desenhar tudo da flip no display
         pg.display.flip()
 

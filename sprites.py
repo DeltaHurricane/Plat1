@@ -6,8 +6,9 @@ vec = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self , game):
+    def __init__(self , game, controls):
         pg.sprite.Sprite.__init__(self)
+        self.controls = controls
         self.image = pg.Surface(PLAYER_SIZE)
         self.game = game
         self.image.fill(YELLOW)
@@ -28,14 +29,21 @@ class Player(pg.sprite.Sprite):
         hits = pg.sprite.spritecollide(self,self.game.plataforms,False)
         self.rect.y -=1
         keys = pg.key.get_pressed()
-        if not hits and keys [pg.K_DOWN]:
+        if not hits and keys [self.controls[0]]:
             self.vel.y = 15
         elif hits:
-            if keys [pg.K_DOWN]:
+            if keys [self.controls[0]]:
                 self.enable_colision = 0
             else:
                 self.vel.y = -15
 
+    def do(self,key):
+        if key == self.controls[4]:
+            self.jump()
+        elif key == self.controls[5]:
+            self.AtkRanged()
+        else:
+            self.AtkMelee()
 
     def AtkRanged(self):
         self.atkranged = AtkRanged(self)
@@ -50,9 +58,9 @@ class Player(pg.sprite.Sprite):
     def direcao(self):
         dir = vec(self.direcion,0)
         keys = pg.key.get_pressed()
-        if keys[pg.K_UP]:
+        if keys[self.controls[1]]:
             dir.y = -1
-        if keys[pg.K_DOWN]:
+        if keys[self.controls[0]]:
             dir.y = 1
         return dir
 
@@ -60,10 +68,10 @@ class Player(pg.sprite.Sprite):
         #acelera o player pra baixo e checa se ele ta indo pra esquerda ou direita
         self.acc = vec(0, 0.50)
         keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT]:
+        if keys[self.controls[2]]:
             self.acc.x = -PLAYER_ACC
             self.direcion =-1
-        elif keys[pg.K_RIGHT]:
+        elif keys[self.controls[3]]:
             self.acc.x = PLAYER_ACC
             self.direcion = 1
 
