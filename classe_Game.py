@@ -65,13 +65,15 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
                 if event.key == pg.K_z:
-                    self.atkranged = AtkRanged(self.player)
-                    self.all_sprites.add((self.atkranged))
+                    self.player.AtkRanged()
+                if event.key == pg.K_x:
+                    self.player.AtkMelee()
 
     def draw(self):
         # draw / render
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
+        self.player.atk_sprites.draw((self.screen))
         # depois de desenhar tudo da flip no display
         pg.display.flip()
 
