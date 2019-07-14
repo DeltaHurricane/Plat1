@@ -3,6 +3,9 @@
 from settings import *
 import pygame as pg
 from sprites import *
+from os import path
+
+img_dir = path.join(path.dirname(__file__), 'img')
 import random
 
 class Game:
@@ -14,7 +17,11 @@ class Game:
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
-
+        player_img = pg.image.load(path.join(img_dir, "p1_front.png")).convert()
+        atk_img = []
+        for i  in range (8):
+            atk_img.append( pg.image.load(path.join(img_dir, "icicle_{}.png".format(i))).convert())
+        self.player_graf = {0:player_img, 1:atk_img}
         self.running = True
 
 
@@ -23,7 +30,7 @@ class Game:
         self.plataforms = pg.sprite.Group()
         self.players = {}
         for i in range(PLAYER_QTD):
-            player = (Player(self,PLAYER_KEYS[i]))
+            player = (Player(self,PLAYER_KEYS[i],self.player_graf))
             self.players[i] = (player)
             self.all_sprites.add((player))
         for p1 in PLATAFORM_LIST:

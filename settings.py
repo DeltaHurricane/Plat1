@@ -8,7 +8,7 @@ FPS = 60
 #num de jogadores
 
 PLAYER_QTD = 2
-PLAYER_KEYS = {0:[pg.K_DOWN,pg.K_UP,pg.K_LEFT,pg.K_RIGHT,pg.K_SPACE,pg.K_n,pg.K_m]
+PLAYER_KEYS = {0:[pg.K_k,pg.K_i,pg.K_j,pg.K_l,pg.K_SPACE,pg.K_n,pg.K_m]
                ,1:[pg.K_s,pg.K_w,pg.K_a,pg.K_d,pg.K_f,pg.K_g,pg.K_h],
                2:[pg.K_s,pg.K_w,pg.K_a,pg.K_d,pg.K_f,pg.K_g,pg.K_h],
                3:[pg.K_s,pg.K_w,pg.K_a,pg.K_d,pg.K_f,pg.K_g,pg.K_h]}

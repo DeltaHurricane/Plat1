@@ -6,12 +6,13 @@ vec = pg.math.Vector2
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self , game, controls):
+    def __init__(self , game, controls, graf):
         pg.sprite.Sprite.__init__(self)
         self.controls = controls
-        self.image = pg.Surface(PLAYER_SIZE)
+        self.graf = graf
+        self.image = pg.transform.scale(self.graf[0],(PLAYER_SIZE))
+        self.image.set_colorkey(BLACK)
         self.game = game
-        self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.pos = (WIDTH / 2, HEIGHT / 2)
@@ -107,10 +108,10 @@ class Plataform(pg.sprite.Sprite):
 class AtkRanged (pg.sprite.Sprite):
     def __init__(self, player):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((5, 5))
-        self.image.fill(RED)
-        self.rect = self.image.get_rect()
         self.vel = player.direcao()
+        self.image = player.graf[1][2]
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
         self.rect.center = (player.rect.center[0]+ PLAYER_SIZE[0]/2*self.vel.x , player.rect.center[1] + PLAYER_SIZE[1]/2*self.vel.y)
 
     def update(self):
